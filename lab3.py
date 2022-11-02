@@ -54,7 +54,7 @@ def draw():
     glColor3f(1, 0, 0)
     glTranslatef(0, -0.31, -0.1)
     glRotatef(20, 1, 0, 0)
-    glutSolidCylinder(0.2, 0.05, 100, 100)
+    glutSolidCylinder(0.15, 0.01, 100, 100)
     glPopMatrix()
 
     # рога
@@ -64,7 +64,6 @@ def draw():
     glTranslatef(0.2, 0, 0)
     glutSolidCylinder(0.01, 0.3, 100, 100)
 
-    # glColor3f(1, 0.5, 0)
     glTranslatef(0, 0, 0.28)
     glutSolidSphere(0.03, 100, 100)
     glTranslatef(-0.2, 0, 0)
