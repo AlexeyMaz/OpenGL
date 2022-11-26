@@ -5,7 +5,9 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-global time
+global rot
+global tran
+global goingUp
 
 
 class Material:
@@ -39,26 +41,29 @@ def drawBody():
     gold = Material(0.24725, 0.1995, 0.0745, 0.75164, 0.60648, 0.22648, 0.628281, 0.555802, 0.366065, 0.4)
     yrubber = Material(0.05, 0.05, 0, 0.05, 0.05, 0.4, 0.7, 0.7, 0.04, .078125)
     crubber = Material(0, 0.05, 0.05, 0.4, 0.5, 0.5, 0.04, 0.7, 0.7, .078125)
-    emerald.active()
+    chrome.active()
 
     glPushMatrix()
-
-    glTranslatef(0, 0, 0)
-    glRotatef(time, 0, 0, 1)
+    glTranslatef(0, 0, tran / 100)
+    glRotatef(rot, 0, 0, 1)
     glutSolidCube(0.7)
 
     glPopMatrix()
 
 
 def init():
-    global time
+    global rot
+    global tran
+    global goingUp
 
-    time = 0
+    rot = 0
+    tran = 0
+    goingUp = True
 
     glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)  # Определяем текущую модель освещения
     glEnable(GL_LIGHTING)
 
-    light_diffuse = [1, 1, 0]  # по заданию light_diffuse = [0, 0, 1]
+    light_diffuse = [0, 0, 1]
     light_pos = [0.0, 1.0, 0.0, 1.0]
 
     glEnable(GL_LIGHT2)
@@ -91,17 +96,26 @@ def specialkeys(key, x, y):
 
 
 def draw():
-    global time
+    global rot
+    global tran
+    global goingUp
 
-    time += 0.5
-    if time == 630:
-        time = 0
-    print(time)
+    rot += 0.5
+    if rot == 630:
+        rot = 0
+
+    if tran == 130:
+        tran -= 0.5
+        goingUp = False
+    elif tran == -130:
+        tran += 0.5
+        goingUp = True
+    elif goingUp:
+        tran += 0.5
+    elif not goingUp:
+        tran -= 0.5
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glLightfv(GL_LIGHT0, GL_POSITION,
-              (time * math.cos(time / 100), 0, time * math.sin(time / 100)))
-
     drawBody()
     glutSwapBuffers()
 
