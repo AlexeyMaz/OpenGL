@@ -1,6 +1,3 @@
-import pygame
-import math
-from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -44,9 +41,10 @@ def drawBody():
     chrome.active()
 
     glPushMatrix()
+
     glTranslatef(0, 0, tran / 100)
     glRotatef(rot, 0, 0, 1)
-    glutSolidCube(0.7)
+    glutSolidCube(0.9)
 
     glPopMatrix()
 
@@ -73,26 +71,26 @@ def init():
     glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.2)
     glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.4)
 
+    light_diffuse1 = [1, 0, 0]
+    light_pos1 = [0.0, 0.0, 1.5, 1.0]
+
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse1)
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos1)
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0)
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.2)
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.4)
+
+    light_diffuse2 = [0, 1, 0]
+    light_pos2 = [1.0, 0.0, 0.0, 1.0]
+
+    glEnable(GL_LIGHT1)
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse2)
+    glLightfv(GL_LIGHT1, GL_POSITION, light_pos2)
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.0)
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.2)
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.4)
     glEnable(GL_DEPTH_TEST)
-
-
-# не пашет
-def specialkeys(key, x, y):
-    glPushMatrix()
-
-    glLoadIdentity()
-    ms = 0.06
-    # apply the movment
-    if key == GLUT_KEY_UP:
-        glTranslatef(0, 0, ms)
-    if key == GLUT_KEY_DOWN:
-        glTranslatef(0, 0, -ms)
-    if key == GLUT_KEY_RIGHT:
-        glTranslatef(-ms, 0, 0)
-    if key == GLUT_KEY_LEFT:
-        glTranslatef(ms, 0, 0)
-
-    glPopMatrix()
 
 
 def draw():
@@ -100,20 +98,20 @@ def draw():
     global tran
     global goingUp
 
-    rot += 0.5
-    if rot == 630:
+    rot += 3
+    if rot >= 630:
         rot = 0
 
-    if tran == 130:
-        tran -= 0.5
+    if tran >= 130:
+        tran -= 3
         goingUp = False
-    elif tran == -130:
-        tran += 0.5
+    elif tran <= -130:
+        tran += 3
         goingUp = True
     elif goingUp:
-        tran += 0.5
+        tran += 3
     elif not goingUp:
-        tran -= 0.5
+        tran -= 3
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     drawBody()
@@ -141,10 +139,8 @@ def changeSize(w, h):
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
 glutInitWindowSize(1200, 750)
 glutInit(sys.argv)
-glutCreateWindow('test')
-
+glutCreateWindow('cube')
 glutDisplayFunc(draw)
-glutSpecialFunc(specialkeys)
 glutIdleFunc(redraw)
 init()
 glutReshapeFunc(changeSize)
